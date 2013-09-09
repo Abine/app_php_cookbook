@@ -38,9 +38,27 @@
   RewriteCond %{REMOTE_ADDR} ^(127.0.0.1)
   RewriteRule ^(/server-status) $1 [H=server-status,L]
 
+  <% if node[:web_apache][:abine_hack] == "true" -%>
+  # This seems to be necessary to work smoothly with the reverse proxy rules
+  DirectoryIndex index.php
+
+  # These rules reverse proxy any non-existent file to glass.abine.com
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_FILENAME} !-l
+  RewriteRule ^(.*) http://glass.abine.com$1 [P,QSA,L]
+  ProxyPassReverse / http://glass.abine.com/
+  <% end -%>
+
   # Setup the logs in the appropriate directory
-  CustomLog <%= node[:apache][:log_dir] %>/access.log combined
+  <% if (node[:web_apache][:system_log] == 'true') -%>
+  CustomLog "|/usr/bin/logger -t apache -i -p local2.notice" <%= node[:web_apache][:log_format] %>
+  ErrorLog syslog:local1
+  <% else -%>
+  CustomLog <%= node[:apache][:log_dir] %>/access.log <%= node[:web_apache][:log_format] %>
   ErrorLog  <%= node[:apache][:log_dir] %>/error.log
+  <% end -%>
+
   LogLevel warn
 
   # Deflate

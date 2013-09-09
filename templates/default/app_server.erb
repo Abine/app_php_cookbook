@@ -1,11 +1,11 @@
-#
+# 
 # Cookbook Name:: app_php
 #
 # Copyright RightScale, Inc. All rights reserved.
 # All access and use subject to the RightScale Terms of Service available at
 # http://www.rightscale.com/terms.php and, if applicable, other agreements
 # such as a RightScale Master Subscription Agreement.
-#
+# 
 # Managed by RightScale
 # DO NOT EDIT BY HAND
 #
@@ -39,8 +39,13 @@
   RewriteRule ^(/server-status) $1 [H=server-status,L]
 
   # Setup the logs in the appropriate directory
-  CustomLog <%= node[:apache][:log_dir] %>/access_log combined
-  ErrorLog  <%= node[:apache][:log_dir] %>/error_log
+  <% if (node[:web_apache][:system_log] == 'true') -%>
+  CustomLog "|/usr/bin/logger -t apache -i -p local2.notice" <%= node[:web_apache][:log_format] %>
+  ErrorLog syslog:local1
+  <% else -%>
+  CustomLog <%= node[:apache][:log_dir] %>/access.log <%= node[:web_apache][:log_format] %>
+  ErrorLog  <%= node[:apache][:log_dir] %>/error.log
+  <% end -%>
   LogLevel warn
 
   # Deflate
