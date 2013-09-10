@@ -2,6 +2,7 @@
 
 ## DESCRIPTION:
 
+* This cookbook is available at [https://github.com/rightscale/rightscale_cookbooks](https://github.com/rightscale/rightscale_cookbooks).
 * Cookbook provides Apache + PHP implementation of the app LWRP.
 * Installs and configures an Apache + PHP application server.
 
@@ -47,7 +48,7 @@ ServerTemplates)
 
 Please checkout the tutorial: [PHP App Server][Tutorial]
 
-[Tutorial]: http://support.rightscale.com/03-Tutorials/PHP_Application_Server_Setup
+[Tutorial]: http://support.rightscale.com/ServerTemplates/Infinity/ST/PHP_App_Server_(v13_Infinity)/PHP_App_Server_(v13_Infinity)_-_Tutorial
 
 ## DETAILS:
 
